@@ -1,26 +1,28 @@
 {
-    "name"        : "auto-sampler-sorter",
-    "description" : "Sort Mainstage 3 auto-samples for use in Ableton Live",
-    "license"     : "Apache-2.0",
-    "homepage"    : "https://github.com/daxxog/auto-sampler-sorter",
-    "main"        : "auto-sampler-sorter.min.js",
-    "version"     : "0.0.1",
+    "name": "auto-sampler-sorter",
+    "description": "Sort Mainstage 3 auto-samples for use in Ableton Live",
+    "license": "Apache-2.0",
+    "homepage": "https://github.com/daxxog/auto-sampler-sorter",
+    "main": "auto-sampler-sorter.min.js",
+    "version": "0.0.1",
     "engines": {
-        "node" : ">=0.10.33"
+        "node": ">=0.10.33"
     },
-    "maintainers": [{
-        "name"  : "David Volm",
-        "email" : "david@volminator.com",
-        "web"   : "http://daxxog.com/"
-    }],
+    "maintainers": [
+        {
+            "name": "David Volm",
+            "email": "david@volminator.com",
+            "web": "http://daxxog.com/"
+        }
+    ],
     "repository": {
-        "type" : "git",
-        "url"  : "https://github.com/daxxog/auto-sampler-sorter.git"
+        "type": "git",
+        "url": "https://github.com/daxxog/auto-sampler-sorter.git"
     },
     "devDependencies": {
         "bitfactory": "*",
         "stoptime": "*",
-        "uglify-js": "*",
+        "uglify-js": "2.6.0",
         "vows": "*"
     },
     "scripts": {
@@ -35,6 +37,10 @@
         "bin/auto-sampler-sorter"
     ],
     "bin": {
-        "auto-sampler-sorter" : "bin/auto-sampler-sorter"
+        "auto-sampler-sorter": "bin/auto-sampler-sorter"
+    },
+    "dependencies": {
+        "shelljs": "^0.8.2",
+        "string": "^3.3.3"
     }
 }

@@ -5,3 +5,4 @@ npm-debug.log
 ._.DS_Store
 cli.min.js
 auto-sampler-sorter.min.js
+package-lock.json

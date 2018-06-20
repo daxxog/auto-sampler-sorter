@@ -21,6 +21,102 @@
   }
 }(this, function() {
     var AutoSamplerSorter;
+
+    var sh = require('shelljs'),
+        S = require('string'),
+        path = require('path'),
+        fs = require('fs');
+
+    var noteOrder = [
+        'C',
+        'C#',
+        'D',
+        'D#',
+        'E',
+        'F',
+        'F#',
+        'G',
+        'G#',
+        'A',
+        'A#',
+        'B'
+    ];
+
+    var haystacks = [];
+
+    noteOrder.forEach(function(v, i, a) {
+        var haystack = [];
+
+        for(var j = 0; j < 10; j++) {
+            haystack.push(v + (j-2));
+        }
+
+        haystacks.push(haystack);
+    });
+
+    var msnpf = function(haystacks, needle) { //Multi-Stack Needle Position Finder
+        var position = [];
+
+        haystacks.forEach(function(haystack, i, a) {
+            haystack.forEach(function(v, j, b) {
+                if(v === needle) {
+                    position = [i, j];
+                };
+            });
+        });
+
+        return position;
+    };
+
+    var twodigits = function(n) {
+        return ('0' + n).slice(-2);
+    };
+
+    AutoSamplerSorter = function() {
+        var pwd = sh.pwd().toString(),
+            patchName = path.basename(pwd);
+
+        fs.readdir(pwd, function(err, items) {
+            if(!err) {
+                if(items.length >= 120) { //only really does one velocity right now
+                    console.log('# ' + patchName);
+                    console.log('# ' + (items.length / 10) + ' octaves');
+
+                    items.map(function(v) {
+                        var tags = S(v).replaceAll(patchName + '-', '').split('-'),
+                            hayneedle = [],
+                            velocity = -1,
+                            ext = '';
+
+                        if(tags.length === 3) {
+                            hayneedle = msnpf(haystacks, tags[0]);
+                            velocity = tags[1];
+                            ext = tags[2];
+                        } else if(tags.length === 4) {
+                            hayneedle = msnpf(haystacks, tags[0] + '-' + tags[1]);
+                            velocity = tags[2];
+                            ext = tags[3];
+                        } else {
+                            console.error('# # !error! #:# invalid filename scheme!');
+                            console.log('# # !error! #:# ' + v);
+                        }
+
+                        if(velocity === -1) {
+                            return - 1;
+                        } else {
+                            return [v, [hayneedle[1], twodigits(hayneedle[0]), noteOrder[hayneedle[0]], velocity, 'SORTED-', ext].join('-')];
+                        }
+                    }).forEach(function(v, i, a) {
+                        if(v !== -1) {
+                            console.log('mv ' + v[0] + ' ' + v[1]);
+                        }
+                    });
+                }
+            } else {
+                console.error('# # !error! #:# ' + err);
+            }
+        });
+    }
     
     return AutoSamplerSorter;
 }));
