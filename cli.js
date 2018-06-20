@@ -5,6 +5,6 @@
  * http://www.apache.org/licenses/LICENSE-2.0.html  
  */
 
-var AutoSamplerSorter = require('./auto-sampler-sorter.js');
+var AutoSamplerSorter = require('./auto-sampler-sorter.min.js');
 
 new AutoSamplerSorter();
