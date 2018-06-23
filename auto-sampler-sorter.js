@@ -74,7 +74,13 @@
 
     AutoSamplerSorter = function() {
         var pwd = sh.pwd().toString(),
-            patchName = path.basename(pwd);
+            patchName = path.basename(pwd),
+            roundRobin = haystacks.map(function(v) { //make a matrix for roundRobin values
+                return v.map(function(v) {
+                    return 0;
+                });
+            }),
+            madeRobin  = {};
 
         fs.readdir(pwd, function(err, items) {
             if(!err) {
@@ -82,18 +88,31 @@
                     console.log('# ' + patchName);
                     console.log('# ' + (items.length / 10) + ' octaves');
 
+                    items.forEach(function(v, i, a) { //remove hidden items like .DS_Store
+                        if(S(v).startsWith('.')) {
+                            a.splice(i, 1);
+                        }
+                    });
+
                     items.map(function(v) {
                         var tags = S(v).replaceAll(patchName + '-', '').split('-'),
                             hayneedle = [],
+                            octave = -1,
+                            note = -1;
                             velocity = -1,
+                            rrobin = -1;
                             ext = '';
 
                         if(tags.length === 3) {
                             hayneedle = msnpf(haystacks, tags[0]);
+                            octave = hayneedle[1];
+                            note = hayneedle[0];
                             velocity = tags[1];
                             ext = tags[2];
-                        } else if(tags.length === 4) {
+                        } else if(tags.length === 4) { //negative octave values
                             hayneedle = msnpf(haystacks, tags[0] + '-' + tags[1]);
+                            octave = hayneedle[1];
+                            note = hayneedle[0];
                             velocity = tags[2];
                             ext = tags[3];
                         } else {
@@ -101,14 +120,22 @@
                             console.log('# # !error! #:# ' + v);
                         }
 
-                        if(velocity === -1) {
+                        if(velocity === -1 && note === -1 && octave === -1) {
                             return - 1;
                         } else {
-                            return [v, [hayneedle[1], twodigits(hayneedle[0]), noteOrder[hayneedle[0]], velocity, 'SORTED-', ext].join('-')];
+                            rrobin = roundRobin[note][octave] += 1; //figure out how many robins
+
+                            //some messy return line login ;)
+                            return [v, ((rrobin > 1) ? 'round-robin-' + rrobin : -1), ((rrobin > 1) ? './round-robin-' + rrobin + '/' : '') + [octave, twodigits(note), noteOrder[note], velocity, 'SORTED-', ext].join('-')];
                         }
                     }).forEach(function(v, i, a) {
                         if(v !== -1) {
-                            console.log('mv ' + v[0] + ' ' + v[1]);
+                            if((v[1] !== -1) && !madeRobin[v[1]]) { //make round robin directory
+                                console.log('mkdir ' + v[1]);
+                                madeRobin[v[1]] = true;
+                            }
+
+                            console.log('mv ' + v[0] + ' ' + v[2]);
                         }
                     });
                 }
