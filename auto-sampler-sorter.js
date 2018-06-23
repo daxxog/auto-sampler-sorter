@@ -123,7 +123,6 @@
                         if((velocity === -1 && note === -1 && octave === -1) || isNaN(velocity) || isNaN(note) || isNaN(octave)) {
                             return - 1;
                         } else {
-                            console.log(velocity, note, octave);
                             rrobin = roundRobin[note][octave] += 1; //figure out how many robins
 
                             //some messy return line login ;)
