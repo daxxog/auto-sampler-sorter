@@ -107,22 +107,23 @@
                             hayneedle = msnpf(haystacks, tags[0]);
                             octave = hayneedle[1];
                             note = hayneedle[0];
-                            velocity = tags[1];
+                            velocity = parseInt(tags[1], 10);
                             ext = tags[2];
                         } else if(tags.length === 4) { //negative octave values
                             hayneedle = msnpf(haystacks, tags[0] + '-' + tags[1]);
                             octave = hayneedle[1];
                             note = hayneedle[0];
-                            velocity = tags[2];
+                            velocity = parseInt(tags[2], 10);
                             ext = tags[3];
                         } else {
                             console.error('# # !error! #:# invalid filename scheme!');
-                            console.log('# # !error! #:# ' + v);
+                            console.log('# # !error! #:# ' + v + ' | ' + tags.length + ' | ' + tags);
                         }
 
-                        if(velocity === -1 && note === -1 && octave === -1) {
+                        if((velocity === -1 && note === -1 && octave === -1) || isNaN(velocity) || isNaN(note) || isNaN(octave)) {
                             return - 1;
                         } else {
+                            console.log(velocity, note, octave);
                             rrobin = roundRobin[note][octave] += 1; //figure out how many robins
 
                             //some messy return line login ;)
